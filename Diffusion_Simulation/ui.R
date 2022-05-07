@@ -1,7 +1,11 @@
 
 
 library(shiny)
-
+library(tidyverse)
+library(gganimate)
+library(gifski)
+library(grDevices)
+library(RColorBrewer)
 # Define UI for application that draws a histogram
 shinyUI(navbarPage(title = "The Diffusion Model?",
                    tabPanel("What is The Diffusion Model",
@@ -13,7 +17,7 @@ shinyUI(navbarPage(title = "The Diffusion Model?",
                             sidebarLayout(
                                 sidebarPanel(
                                     h3("Select Values for Diffusion Model Parameters"),
-                                    sliderInput("V",
+                                    sliderInput("v",
                                                 "Select Drift Rate:",
                                                 min = -.5,
                                                 max = .5,
@@ -31,8 +35,10 @@ shinyUI(navbarPage(title = "The Diffusion Model?",
 
                                 ),
                                 mainPanel(
-                                    h2("Gaussian Distribution"),
-                                    plotOutput("distPlot")
+                                    textOutput("var"),
+                                    textOutput("time")
+                                    #,plotOutput("distPlot")
+                                    
                                 ))
                    
     
