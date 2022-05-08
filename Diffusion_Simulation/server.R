@@ -61,16 +61,21 @@ shinyServer(function(input, output) {
 
          }
 }
-     output$drift<-renderTable({
-         brown_drift_new()
-     })    
-     driftdata<-reactive({cbind(t(),brown_drift_new())})
-
-    # colnames(driftdata)<-c("Timestep",paste0("Sim",seq(1:nsim)))
-    # 
-    # df <- driftdata %>%
-    #     select(Timestep, paste0("Sim",seq(1:nsim))) %>%
-    #     gather(key = "Simulation", value = "Evidence", -Timestep)
+  
+     driftdata<-reactive({x<-cbind(t(),brown_drift_new())
+                         colnames(x)<-c("Timestep",paste0("Sim",seq(1:2)))
+                         x %>%
+                         as.data.frame%>%
+                         select(Timestep, paste0("Sim",seq(1:2))) %>%
+                         gather(key = "Simulation", value = "Evidence", -Timestep)  
+                        })
+ 
+     
+  
+        output$drift<-renderTable({
+         head(driftdata())
+     })   
+    # df <- 
     # 
     # newdf<-data.frame()
     # for(i in 1:nsim){
@@ -83,15 +88,15 @@ shinyServer(function(input, output) {
     # pal<-colorRampPalette(cols)
     # 
     # 
-    # output$distPlot <- renderPlot({
+     output$distPlot <- renderPlot({
     #     
-    #     p<-ggplot(newdf,aes(x=Timestep,y=Evidence))+geom_path(aes(color=Simulation))+
-    #         geom_hline(yintercept=c(input$a,-input$a),color='red',size=1.5)+
+         p<-ggplot(driftdata(),aes(x=Timestep,y=Evidence))+geom_path(aes(color=Simulation))+
+             geom_hline(yintercept=c(input$a,-input$a),color='red',size=1.5)+
     #         scale_color_brewer(palette = "Dark2")+
-    #         ggtitle("Simulation of 5 Separate Diffusion Paths \n With Absorbing Boundaries",
-    #                 subtitle = paste('v = ',V,'z = ',Z,'a = ',A))+
-    #         theme(plot.title = element_text(hjust=.5),plot.subtitle = element_text(hjust=.5))
-    #     
-    # })
+             ggtitle("Simulation of 5 Separate Diffusion Paths \n With Absorbing Boundaries",
+                     subtitle = paste('v = ',input$v,'z = ',input$z,'a = ',input$a))+
+             theme(plot.title = element_text(hjust=.5),plot.subtitle = element_text(hjust=.5))
+        p    
+     })
     
 })

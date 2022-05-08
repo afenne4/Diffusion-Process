@@ -21,7 +21,7 @@ shinyUI(navbarPage(title = "The Diffusion Model?",
                                                 "Select Drift Rate:",
                                                 min = -.5,
                                                 max = .5,
-                                                value = 0),
+                                                value = .1),
                                     sliderInput("a",
                                                 "Select Boundary Separation:",
                                                 min=5,
@@ -38,7 +38,7 @@ shinyUI(navbarPage(title = "The Diffusion Model?",
                                     textOutput("var"),
                                     textOutput("time"),
                                     tableOutput("drift")
-                                    #,plotOutput("distPlot")
+                                    ,plotOutput("distPlot")
                                     
                                 ))
                    
