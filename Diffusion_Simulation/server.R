@@ -15,7 +15,7 @@ brownian<-function(T,N,delta,z){
     dt<-T/N
     # create vector of random variables
     r<-rnorm(N,0,1*delta*sqrt(dt))
-    # incorporate starting point random variables
+    # incorporate starting point with random variables
     r<-c(z,r)
     # Brownian Motion is calculated by a cumulative sum of the random samples
     brown<-cumsum(r)
@@ -33,37 +33,39 @@ brownian_drift<-function(T,N,delta,z,v,sigma){
     dt=T/N
     time_steps<-seq(from=0,to=N*dt,length.out = N+1)
     V<-v*time_steps+sigma*brown
-    return(V)
+#    xx<-list(brown,time_steps,V)
+#    return(xx)
+        return(V)
 }
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
 
     
     sigma<-1 # diffusion coefficient
-    A<-reactive({as.numeric(input$a)})
-    V<-reactive({as.numeric(input$v)})
-    Z<-reactive({as.numeric(input$z)})
     N=1000
-
-
+    nsim=5
+    delta=1
      T=reactive({2*(input$a/input$v*sigma)})
      output$var<-renderText({
          T()
      })
-     nsim=5
-     delta=1
-     
-     brown_drift<-data.frame()
-     t<-reactive({seq(from=0,to=N*(T()/N),length.out = N+1)})
 
      
+#     brown_drift<-matrix(0,nrow=N+1,ncol=nsim)
+     t<-reactive({seq(from=0,to=N*(T()/N),length.out = N+1)})
+#     brown_drift<-data.frame()
+     
      for(sim in 1:nsim){
-        if(sim==1){ brown_drift<-reactive({brownian_drift(T(),N,delta,inpout$z,input$v,sigma)})}
-         else{browndrift<-cbind(brown_drift,reactive({brownian_drift(T(),N,delta,inpout$z,input$v,sigma)}))}
-     }
-    # 
-    # 
-    # driftdata<-data.frame(t,brown_drift)
+        if(sim==1){ brown_drift<-reactive({brownian_drift(T(),N,delta,input$z,input$v,sigma)})}
+        else{brown_drift_new<-reactive({cbind(brown_drift(),brownian_drift(T(),N,delta,input$z,input$v,sigma))})
+
+         }
+}
+     output$drift<-renderTable({
+         brown_drift_new()
+     })    
+     driftdata<-reactive({cbind(t(),brown_drift_new())})
+
     # colnames(driftdata)<-c("Timestep",paste0("Sim",seq(1:nsim)))
     # 
     # df <- driftdata %>%
