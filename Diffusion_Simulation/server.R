@@ -42,11 +42,11 @@ shinyServer(function(input, output) {
 
     
     N=1000
-    nsim=5
+    nsim=500
     delta=1
     
     driftdata<-reactive({
-        T<-2*abs(input$a/(input$v+.01)*input$sigma)
+        T<-4*abs(input$a/(input$v+.1)*input$sigma)
         t<-seq(from=0,to=N*(T/N),length.out = N+1)
         brown_drift<-matrix(0,nrow=N+1,ncol=nsim)
         for(sim in 1:nsim){
@@ -61,7 +61,7 @@ shinyServer(function(input, output) {
             gather(key = "Simulation", value = "Evidence", -Timestep)  
 
         newdf<-data.frame()
-        for(i in 1:nsim){
+        for(i in 1:5){
             first<-which(df$Simulation==paste0("Sim",i))[1]  
             ind<-which(df$Simulation==paste0("Sim",i)&(df$Evidence>=input$a|df$Evidence<=-input$a))[1]
              if(is.na(ind)){ind<-first+N+1}
@@ -75,24 +75,20 @@ shinyServer(function(input, output) {
          head(driftdata())
      })   
 
-  
-    # 
-    # cols<-brewer.pal(3,"BuGn")  
-    # pal<-colorRampPalette(cols)
-    # 
-    # 
-    #output$distPlot <- renderPlot({
+
      output$DiffusionPlot<-renderImage({ 
          outfile<-tempfile(fileext='.gif')
          
-         p<-ggplot(driftdata(),aes(x=Timestep,y=Evidence))+geom_path(aes(color=Simulation))+
+         p<-ggplot(driftdata(),aes(x=Timestep,y=Evidence,color=Simulation))+
+             geom_path()+
              geom_hline(yintercept=c(input$a,-input$a),color='red',size=1.5)+
              scale_color_brewer(palette = "Dark2")+
              ggtitle("Simulation of 5 Separate Diffusion Paths \n With Absorbing Boundaries",
              subtitle = paste('v = ',input$v,'z = ',input$z,'a = ',input$a,'Sigma = ',input$sigma))+
              theme(plot.title = element_text(hjust=.5),plot.subtitle = element_text(hjust=.5))+
              transition_reveal(Timestep)
-         anim_save("outfile.gif",animate(p,nframes=40))
+        
+        anim_save("outfile.gif",animate(p,nframes=40))
         list(src="outfile.gif",
              contentType='image/gif'
              # width=400,

@@ -17,6 +17,7 @@ shinyUI(navbarPage(title = "The Diffusion Model?",
                             sidebarLayout(
                                 sidebarPanel(
                                     h3("Select Values for Diffusion Model Parameters"),
+                                    h5("(Animation takes ~5s to render)"),
                                     sliderInput("v",
                                                 "Select Drift Rate:",
                                                 min = -.5,
