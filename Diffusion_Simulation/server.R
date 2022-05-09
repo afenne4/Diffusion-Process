@@ -45,7 +45,7 @@ shinyServer(function(input, output) {
     N=1000
     nsim=5
     delta=1
-     T=reactive({2*(input$a/input$v*sigma)})
+     T=reactive({2*abs(input$a/input$v*sigma)})
      output$var<-renderText({
          T()
      })
