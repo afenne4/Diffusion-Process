@@ -67,7 +67,7 @@ df <- driftdata %>%
 newdf<-data.frame()
 for(i in 1:nsim){
     first<-which(df$Simulation==paste0("Sim",i))[1]  
-    ind<-which(df$Simulation==paste0("Sim",i)&(df$Evidence>=a|df$Evidence<=a))[1]
+    ind<-which(df$Simulation==paste0("Sim",i)&(df$Evidence>=a|df$Evidence<=-a))[1]
     newdf<-rbind(newdf,df[first:ind,])
 }  
 
