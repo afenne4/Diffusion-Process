@@ -81,15 +81,24 @@ shinyServer(function(input, output) {
     # pal<-colorRampPalette(cols)
     # 
     # 
-     output$distPlot <- renderPlot({
-    #     
+    #output$distPlot <- renderPlot({
+     output$DiffusionPlot<-renderImage({ 
+         outfile<-tempfile(fileext='.gif')
+         
          p<-ggplot(driftdata(),aes(x=Timestep,y=Evidence))+geom_path(aes(color=Simulation))+
              geom_hline(yintercept=c(input$a,-input$a),color='red',size=1.5)+
              scale_color_brewer(palette = "Dark2")+
              ggtitle("Simulation of 5 Separate Diffusion Paths \n With Absorbing Boundaries",
-                     subtitle = paste('v = ',input$v,'z = ',input$z,'a = ',input$a,'Sigma = ',input$sigma))+
-             theme(plot.title = element_text(hjust=.5),plot.subtitle = element_text(hjust=.5))
-        p    
-     })
+             subtitle = paste('v = ',input$v,'z = ',input$z,'a = ',input$a,'Sigma = ',input$sigma))+
+             theme(plot.title = element_text(hjust=.5),plot.subtitle = element_text(hjust=.5))+
+             transition_reveal(Timestep)
+         anim_save("outfile.gif",animate(p,nframes=40))
+        list(src="outfile.gif",
+             contentType='image/gif'
+             # width=400,
+             #height = 300,
+             # alt = 'This is alternate text
+             )
+     },deleteFile=TRUE)
     
 })
