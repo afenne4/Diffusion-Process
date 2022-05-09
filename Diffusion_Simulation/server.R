@@ -52,31 +52,31 @@ shinyServer(function(input, output) {
         brown_drift<-matrix(0,nrow=N+1,ncol=nsim)
         for(sim in 1:nsim){
             brown_drift[,sim]<-brownian_drift(T,N,delta,input$z,input$v,sigma)
-            #    if(sim==1){ brown_drift<-brownian_drift(T,N,delta,input$z,input$v,sigma)}
-        #    else{brown_drift<-cbind(brown_drift,brownian_drift(T,N,delta,input$z,input$v,sigma))
-        #        }
-        }
+            }
         brown_drift<-as.data.frame(brown_drift)
         x<-cbind(t,brown_drift)
         colnames(x)<-c("Timestep",paste0("Sim",seq(1:nsim)))
-        x %>%
+        df<-x %>%
             as.data.frame%>%
             select(Timestep, paste0("Sim",seq(1:nsim))) %>%
             gather(key = "Simulation", value = "Evidence", -Timestep)  
-        
+
+        newdf<-data.frame()
+        for(i in 1:nsim){
+            first<-which(df$Simulation==paste0("Sim",i))[1]  
+            ind<-which(df$Simulation==paste0("Sim",i)&(df$Evidence>=input$a|df$Evidence<=-input$a))[1]
+             if(is.na(ind)){ind<-first+N+1}
+
+             newdf<-rbind(newdf,df[first:ind,])
+         }
+         newdf
         })
 
         output$drift<-renderTable({
          head(driftdata())
      })   
-    # df <- 
-    # 
-    # newdf<-data.frame()
-    # for(i in 1:nsim){
-    #     first<-which(df$Simulation==paste0("Sim",i))[1]  
-    #     ind<-which(df$Simulation==paste0("Sim",i)&(df$Evidence>=A|df$Evidence<=A))[1]
-    #     newdf<-rbind(newdf,df[first:ind,])
-    # }  
+
+  
     # 
     # cols<-brewer.pal(3,"BuGn")  
     # pal<-colorRampPalette(cols)
@@ -86,7 +86,7 @@ shinyServer(function(input, output) {
     #     
          p<-ggplot(driftdata(),aes(x=Timestep,y=Evidence))+geom_path(aes(color=Simulation))+
              geom_hline(yintercept=c(input$a,-input$a),color='red',size=1.5)+
-    #         scale_color_brewer(palette = "Dark2")+
+             scale_color_brewer(palette = "Dark2")+
              ggtitle("Simulation of 5 Separate Diffusion Paths \n With Absorbing Boundaries",
                      subtitle = paste('v = ',input$v,'z = ',input$z,'a = ',input$a))+
              theme(plot.title = element_text(hjust=.5),plot.subtitle = element_text(hjust=.5))
