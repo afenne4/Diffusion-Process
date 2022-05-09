@@ -49,16 +49,19 @@ shinyServer(function(input, output) {
     driftdata<-reactive({
         T<-2*abs(input$a/input$v*sigma)
         t<-seq(from=0,to=N*(T/N),length.out = N+1)
+        brown_drift<-matrix(0,nrow=N+1,ncol=nsim)
         for(sim in 1:nsim){
-            if(sim==1){ brown_drift<-brownian_drift(T,N,delta,input$z,input$v,sigma)}
-            else{brown_drift_new<-cbind(brown_drift,brownian_drift(T,N,delta,input$z,input$v,sigma))
-                }
+            brown_drift[,sim]<-brownian_drift(T,N,delta,input$z,input$v,sigma)
+            #    if(sim==1){ brown_drift<-brownian_drift(T,N,delta,input$z,input$v,sigma)}
+        #    else{brown_drift<-cbind(brown_drift,brownian_drift(T,N,delta,input$z,input$v,sigma))
+        #        }
         }
-        x<-cbind(t,brown_drift_new)
-        colnames(x)<-c("Timestep",paste0("Sim",seq(1:2)))
+        brown_drift<-as.data.frame(brown_drift)
+        x<-cbind(t,brown_drift)
+        colnames(x)<-c("Timestep",paste0("Sim",seq(1:nsim)))
         x %>%
             as.data.frame%>%
-            select(Timestep, paste0("Sim",seq(1:2))) %>%
+            select(Timestep, paste0("Sim",seq(1:nsim))) %>%
             gather(key = "Simulation", value = "Evidence", -Timestep)  
         
         })
