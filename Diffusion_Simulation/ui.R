@@ -35,8 +35,8 @@ shinyUI(navbarPage(title = "The Diffusion Model?",
 
                                 ),
                                 mainPanel(
-                                    textOutput("var"),
-                                    textOutput("time"),
+                                   # textOutput("var"),
+                                   #textOutput("time"),
                                     tableOutput("drift")
                                     ,plotOutput("distPlot")
                                     

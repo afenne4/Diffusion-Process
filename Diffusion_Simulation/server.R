@@ -45,33 +45,24 @@ shinyServer(function(input, output) {
     N=1000
     nsim=5
     delta=1
-     T=reactive({2*abs(input$a/input$v*sigma)})
-     output$var<-renderText({
-         T()
-     })
+    
+    driftdata<-reactive({
+        T<-2*abs(input$a/input$v*sigma)
+        t<-seq(from=0,to=N*(T/N),length.out = N+1)
+        for(sim in 1:nsim){
+            if(sim==1){ brown_drift<-brownian_drift(T,N,delta,input$z,input$v,sigma)}
+            else{brown_drift_new<-cbind(brown_drift,brownian_drift(T,N,delta,input$z,input$v,sigma))
+                }
+        }
+        x<-cbind(t,brown_drift_new)
+        colnames(x)<-c("Timestep",paste0("Sim",seq(1:2)))
+        x %>%
+            as.data.frame%>%
+            select(Timestep, paste0("Sim",seq(1:2))) %>%
+            gather(key = "Simulation", value = "Evidence", -Timestep)  
+        
+        })
 
-     
-#     brown_drift<-matrix(0,nrow=N+1,ncol=nsim)
-     t<-reactive({seq(from=0,to=N*(T()/N),length.out = N+1)})
-#     brown_drift<-data.frame()
-     
-     for(sim in 1:nsim){
-        if(sim==1){ brown_drift<-reactive({brownian_drift(T(),N,delta,input$z,input$v,sigma)})}
-        else{brown_drift_new<-reactive({cbind(brown_drift(),brownian_drift(T(),N,delta,input$z,input$v,sigma))})
-
-         }
-}
-  
-     driftdata<-reactive({x<-cbind(t(),brown_drift_new())
-                         colnames(x)<-c("Timestep",paste0("Sim",seq(1:2)))
-                         x %>%
-                         as.data.frame%>%
-                         select(Timestep, paste0("Sim",seq(1:2))) %>%
-                         gather(key = "Simulation", value = "Evidence", -Timestep)  
-                        })
- 
-     
-  
         output$drift<-renderTable({
          head(driftdata())
      })   
