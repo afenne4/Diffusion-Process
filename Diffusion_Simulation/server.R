@@ -41,17 +41,16 @@ brownian_drift<-function(T,N,delta,z,v,sigma){
 shinyServer(function(input, output) {
 
     
-    sigma<-1 # diffusion coefficient
     N=1000
     nsim=5
     delta=1
     
     driftdata<-reactive({
-        T<-2*abs(input$a/input$v*sigma)
+        T<-2*abs(input$a/(input$v+.01)*input$sigma)
         t<-seq(from=0,to=N*(T/N),length.out = N+1)
         brown_drift<-matrix(0,nrow=N+1,ncol=nsim)
         for(sim in 1:nsim){
-            brown_drift[,sim]<-brownian_drift(T,N,delta,input$z,input$v,sigma)
+            brown_drift[,sim]<-brownian_drift(T,N,delta,input$z,input$v,input$sigma)
             }
         brown_drift<-as.data.frame(brown_drift)
         x<-cbind(t,brown_drift)
@@ -69,7 +68,7 @@ shinyServer(function(input, output) {
 
              newdf<-rbind(newdf,df[first:ind,])
          }
-         newdf
+         na.omit(newdf)
         })
 
         output$drift<-renderTable({
@@ -88,7 +87,7 @@ shinyServer(function(input, output) {
              geom_hline(yintercept=c(input$a,-input$a),color='red',size=1.5)+
              scale_color_brewer(palette = "Dark2")+
              ggtitle("Simulation of 5 Separate Diffusion Paths \n With Absorbing Boundaries",
-                     subtitle = paste('v = ',input$v,'z = ',input$z,'a = ',input$a))+
+                     subtitle = paste('v = ',input$v,'z = ',input$z,'a = ',input$a,'Sigma = ',input$sigma))+
              theme(plot.title = element_text(hjust=.5),plot.subtitle = element_text(hjust=.5))
         p    
      })
