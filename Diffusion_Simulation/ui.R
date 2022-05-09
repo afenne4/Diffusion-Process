@@ -7,8 +7,8 @@ library(gifski)
 library(grDevices)
 library(RColorBrewer)
 # Define UI for application that draws a histogram
-shinyUI(navbarPage(title = "The Diffusion Model?",
-                   tabPanel("What is The Diffusion Model",
+shinyUI(navbarPage(title = "The Diffusion Model",
+                   tabPanel("What is The Diffusion Model?",
                             h4("This App creates an interactive widget to demonstrate
                                how altering diffusion models paramters influences 
                                the diffusion process")
