@@ -6,6 +6,7 @@ library(gganimate)
 library(gifski)
 library(grDevices)
 library(RColorBrewer)
+library(plotly)
 brownian<-function(T,N,delta,z){
     
     # T is time interval of diffusion process
@@ -94,7 +95,13 @@ shinyServer(function(input, output) {
          head(driftdata()$RTcomb)
          #   head(driftdata())
      })   
-
+        
+        output$RTplot<-renderPlotly({
+            RTp<-ggplot(driftdata()$RTcomb)+
+                geom_histogram(aes(x=RT,color=Type))
+            RTp
+            ggplotly(RTp)
+        })
 
      output$DiffusionPlot<-renderImage({ 
          outfile<-tempfile(fileext='.gif')
@@ -112,12 +119,7 @@ shinyServer(function(input, output) {
         list(src="outfile.gif",
              contentType='image/gif'
              )
-     },deleteFile=TRUE)
+          },deleteFile=TRUE)
      
-     output$RTplot<-renderPlot({
-         RTp<-ggplot(driftdata()$RTcomb)+
-             geom_density(aes(x=RT,color=Type))
-         RTp
-         
-     })
+
 })

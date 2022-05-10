@@ -6,6 +6,8 @@ library(gganimate)
 library(gifski)
 library(grDevices)
 library(RColorBrewer)
+library(plotly)
+
 # Define UI for application that draws a histogram
 shinyUI(navbarPage(title = "The Diffusion Model",
                    tabPanel("What is The Diffusion Model?",
@@ -44,7 +46,8 @@ shinyUI(navbarPage(title = "The Diffusion Model",
 
                                 ),
                                 mainPanel(
-                                    plotOutput("DiffusionPlot")
+                                    plotOutput("DiffusionPlot",width = "500px", height = "400px"),
+                                    plotlyOutput("RTplot",width = "500px", height = "400px")
                                 ))
                    
                     ),
@@ -76,7 +79,7 @@ shinyUI(navbarPage(title = "The Diffusion Model",
                                        value=1.0)
                        ),
                        mainPanel(
-                           plotOutput("RTPlot")
+                         #  plotlyOutput("RTplot")
                        ))
                    )
 ))
