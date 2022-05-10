@@ -50,35 +50,4 @@ shinyUI(navbarPage(title = "The Diffusion Model",
                                 ))
                    
                     ),
-                   tabPanel("RT Plots",
-                   sidebarLayout(
-                       sidebarPanel(
-                           h3("Select Values for Diffusion Model Parameters"),
-                           sliderInput("v",
-                                       "Select Drift Rate:",
-                                       min = -.5,
-                                       max = .5,
-                                       step=.1,
-                                       value = 0),
-                           sliderInput("a",
-                                       "Select Boundary Separation:",
-                                       min=5,
-                                       max=15,
-                                       value=10),
-                           sliderInput("z",
-                                       "Select Starting Point:",
-                                       min=-3,
-                                       max=3,
-                                       value=0),
-                           sliderInput("sigma",
-                                       "Select Noise of Diffusion Process:",
-                                       min=.5,
-                                       max=1.5,
-                                       step=.1,
-                                       value=1.0)
-                       ),
-                       mainPanel(
-                         #  plotlyOutput("RTplot")
-                       ))
-                   )
 ))
