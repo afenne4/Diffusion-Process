@@ -74,8 +74,8 @@ shinyServer(function(input, output) {
              eind<-which(df$Simulation==paste0("Sim",i)&df$Evidence<=-input$a)[1]
              if(is.na(cind)){cind<-first+N}
              if(is.na(eind)){eind<-first+N}
-             if(cind<eind){correctRT<-rbind(correctRT,cind-first)}
-             if(cind>eind){errorRT<-rbind(errorRT,eind-first)}
+             if(cind<eind){correctRT<-rbind(correctRT,df$Timestep[cind])}
+             if(cind>eind){errorRT<-rbind(errorRT,df$Timestep[eind])}
             
         }
         if(length(correctRT)>0){correctRT[,2]<-"CorrectRT";colnames(correctRT)<-c('RT','Type')}
@@ -89,8 +89,8 @@ shinyServer(function(input, output) {
      })   
         
         output$RTplot<-renderPlotly({
-             RTp<-ggplot(driftdata()$RTcomb)+
-                geom_histogram(aes(x=RT,fill=Type),alpha=.5)+
+             RTp<-ggplot(driftdata()$RTcomb,aes(x=RT,fill=Type))+
+                geom_histogram(position="identity",alpha=0.5,color="black")+
                 ggtitle("RT distributions from 500 simulations \nof Diffusion Process")+
                 theme(plot.title=element_text(hjust=.5))
             ggplotly(RTp)
