@@ -34,8 +34,6 @@ brownian_drift<-function(T,N,delta,z,v,sigma){
     dt=T/N
     time_steps<-seq(from=0,to=N*dt,length.out = N+1)
     V<-v*time_steps+sigma*brown
-#    xx<-list(brown,time_steps,V)
-#    return(xx)
         return(V)
 }
 # Define server logic required to draw a histogram
@@ -47,7 +45,8 @@ shinyServer(function(input, output) {
     delta=1
     
     driftdata<-reactive({
-        T<-4*abs(input$a/(input$v+.1)*input$sigma)
+        T<-4*abs(input$a/(input$v)*input$sigma)
+        if(input$v>=0){T<-4*abs(input$a/(input$v+.1)*input$sigma)}
         t<-seq(from=0,to=N*(T/N),length.out = N+1)
         brown_drift<-matrix(0,nrow=N+1,ncol=nsim)
         for(sim in 1:nsim){
@@ -82,25 +81,20 @@ shinyServer(function(input, output) {
         if(length(correctRT)>0){correctRT[,2]<-"CorrectRT";colnames(correctRT)<-c('RT','Type')}
         if(length(errorRT)>0){errorRT[,2]<-"ErrorRT";colnames(errorRT)<-c("RT",'Type')}
         RTcomb<-rbind(correctRT,errorRT)
-        # RTs<-RTcomb%>%
-        #     as.data.frame()%>%
-        #     select_all()%>%
-        #     gather(key="Type",value='RT')
-        list(data=na.omit(newdf),CRT=correctRT,ERT=errorRT,RTcomb=RTcomb)
-        #list(dat=na.omit(newdf))
-        #na.omit(newdf)
+        list(data=na.omit(newdf),RTcomb=RTcomb)
         })
 
         output$drift<-renderTable({
          head(driftdata()$RTcomb)
-         #   head(driftdata())
      })   
         
         output$RTplot<-renderPlotly({
-            RTp<-ggplot(driftdata()$RTcomb)+
-                geom_histogram(aes(x=RT,color=Type))
-            RTp
+             RTp<-ggplot(driftdata()$RTcomb)+
+                geom_histogram(aes(x=RT,fill=Type),alpha=.5)+
+                ggtitle("RT distributions from 500 simulations \nof Diffusion Process")+
+                theme(plot.title=element_text(hjust=.5))
             ggplotly(RTp)
+           
         })
 
      output$DiffusionPlot<-renderImage({ 
@@ -117,7 +111,9 @@ shinyServer(function(input, output) {
         
         anim_save("outfile.gif",animate(p,nframes=40))
         list(src="outfile.gif",
-             contentType='image/gif'
+             contentType='image/gif',
+             width=500,
+             height=500
              )
           },deleteFile=TRUE)
      

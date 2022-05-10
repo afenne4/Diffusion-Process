@@ -41,12 +41,11 @@ shinyUI(navbarPage(title = "The Diffusion Model",
                                                 min=.5,
                                                 max=1.5,
                                                 step=.1,
-                                                value=1.0),
-                                    checkboxInput("ShowRTPlot","Show/Hide RT Distribution Plot",value=FALSE)
+                                                value=1.0)
 
                                 ),
                                 mainPanel(
-                                    plotOutput("DiffusionPlot",width = "500px", height = "400px"),
+                                    plotOutput("DiffusionPlot",width = "500px", height = "500px"),
                                     plotlyOutput("RTplot",width = "500px", height = "400px")
                                 ))
                    
