@@ -42,7 +42,7 @@ shinyServer(function(input, output) {
 
     
     N=1000
-    nsim=500
+    nsim=400
     delta=1
     
     driftdata<-reactive({
@@ -61,25 +61,45 @@ shinyServer(function(input, output) {
             gather(key = "Simulation", value = "Evidence", -Timestep)  
 
         newdf<-data.frame()
-        for(i in 1:5){
+        correctRT<-data.frame()
+        errorRT<-data.frame()
+        for(i in 1:nsim){
             first<-which(df$Simulation==paste0("Sim",i))[1]  
-            ind<-which(df$Simulation==paste0("Sim",i)&(df$Evidence>=input$a|df$Evidence<=-input$a))[1]
-             if(is.na(ind)){ind<-first+N+1}
-
-             newdf<-rbind(newdf,df[first:ind,])
-         }
-         na.omit(newdf)
+            if(i<6){
+                ind<-which(df$Simulation==paste0("Sim",i)&(df$Evidence>=input$a|df$Evidence<=-input$a))[1]
+                    if(is.na(ind)){ind<-first+N}
+                newdf<-rbind(newdf,df[first:ind,])
+           }
+             cind<-which(df$Simulation==paste0("Sim",i)&df$Evidence>=input$a)[1]
+             eind<-which(df$Simulation==paste0("Sim",i)&df$Evidence<=-input$a)[1]
+             if(is.na(cind)){cind<-first+N}
+             if(is.na(eind)){eind<-first+N}
+             if(cind<eind){correctRT<-rbind(correctRT,cind-first)}
+             if(cind>eind){errorRT<-rbind(errorRT,eind-first)}
+            
+        }
+        if(length(correctRT)>0){correctRT[,2]<-"CorrectRT";colnames(correctRT)<-c('RT','Type')}
+        if(length(errorRT)>0){errorRT[,2]<-"ErrorRT";colnames(errorRT)<-c("RT",'Type')}
+        RTcomb<-rbind(correctRT,errorRT)
+        # RTs<-RTcomb%>%
+        #     as.data.frame()%>%
+        #     select_all()%>%
+        #     gather(key="Type",value='RT')
+        list(data=na.omit(newdf),CRT=correctRT,ERT=errorRT,RTcomb=RTcomb)
+        #list(dat=na.omit(newdf))
+        #na.omit(newdf)
         })
 
         output$drift<-renderTable({
-         head(driftdata())
+         head(driftdata()$RTcomb)
+         #   head(driftdata())
      })   
 
 
      output$DiffusionPlot<-renderImage({ 
          outfile<-tempfile(fileext='.gif')
          
-         p<-ggplot(driftdata(),aes(x=Timestep,y=Evidence,color=Simulation))+
+         p<-ggplot(driftdata()$dat,aes(x=Timestep,y=Evidence,color=Simulation))+
              geom_path()+
              geom_hline(yintercept=c(input$a,-input$a),color='red',size=1.5)+
              scale_color_brewer(palette = "Dark2")+
@@ -91,10 +111,13 @@ shinyServer(function(input, output) {
         anim_save("outfile.gif",animate(p,nframes=40))
         list(src="outfile.gif",
              contentType='image/gif'
-             # width=400,
-             #height = 300,
-             # alt = 'This is alternate text
              )
      },deleteFile=TRUE)
-    
+     
+     output$RTplot<-renderPlot({
+         RTp<-ggplot(driftdata()$RTcomb)+
+             geom_density(aes(x=RT,color=Type))
+         RTp
+         
+     })
 })
