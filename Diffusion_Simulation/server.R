@@ -115,7 +115,7 @@ shinyServer(function(input, output) {
     RTplot<-reactive({
               RTp<-ggplot(driftdata()$RTcomb,aes(x=RT,fill=Type))+
                  geom_histogram(position="identity",alpha=0.5,color="black")+
-                 ggtitle("RT distributions from 500 simulations \nof Diffusion Process")+
+                 ggtitle("RT distributions from 500 simulations")+
                  theme(plot.title=element_text(hjust=.5))
              ggplotly(RTp)
     })

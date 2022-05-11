@@ -58,7 +58,12 @@ shinyUI(navbarPage(title = "The Diffusion Model",
                              of the diffusion model, this value is held constant."),
                             h2("Plots in Next Tab"),
                             ("The top plot in the 'Diffusion Model Plots' tab shows the time course of 5 individual
-                             decision processes. ")
+                             decision processes. The middle plot shows a histogram of the correct and error (Top and 
+                             bottom boundary responses) RTs from 500 simulations of the diffusion process. The bottom
+                             plot is a boxplot of correct and error responses that offers a better understanding of
+                             the RT quantiles. The correct and error distributions can be toggled by clicking the
+                             legend. As the drift is increased the amount of error responses will decrease and the
+                             model will no longer predict error RTs.")
                              ),
                             
                             
@@ -66,7 +71,7 @@ shinyUI(navbarPage(title = "The Diffusion Model",
                             sidebarLayout(
                                 sidebarPanel(
                                     h3("Select Values for Diffusion Model Parameters"),
-                                    h5("(Plots take ~10s to render)"),
+                                    h5("(Plots take ~12s to render)"),
                                     sliderInput("v",
                                                 "Select Drift Rate (v):",
                                                 min = -.5,
