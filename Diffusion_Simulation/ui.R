@@ -48,8 +48,8 @@ shinyUI(navbarPage(title = "The Diffusion Model",
                             h4("Starting point (z)"),
                             ("Starting point represents where the information accumulation process begins. This
                              captures biases in preference for one response over another. Positive values make
-                             it more likely for a response to terminate at the upper boundary and vice versa for 
-                             negative values."),
+                             it more likely and quicker for a response to terminate at the upper boundary and 
+                             vice versa for negative values."),
                             h4("Noise of the Diffusion Process (sigma)"),
                             ("This represents how much noise influences the decision making process. This captures
                              the notion that our minds are not perfect processing machines. It is the reason why
@@ -63,7 +63,9 @@ shinyUI(navbarPage(title = "The Diffusion Model",
                              plot is a boxplot of correct and error responses that offers a better understanding of
                              the RT quantiles. The correct and error distributions can be toggled by clicking the
                              legend. As the drift is increased the amount of error responses will decrease and the
-                             model will no longer predict error RTs.")
+                             model will no longer predict error RTs. Adjust the sliders on the left sidebar
+                             to see how different parameter combinations influence RT distributions and the 
+                             time course of the decision process.")
                              ),
                             
                             
@@ -71,7 +73,7 @@ shinyUI(navbarPage(title = "The Diffusion Model",
                             sidebarLayout(
                                 sidebarPanel(
                                     h3("Select Values for Diffusion Model Parameters"),
-                                    h5("(Plots take ~12s to render)"),
+                                    h5("(Plots take ~15s to render)"),
                                     sliderInput("v",
                                                 "Select Drift Rate (v):",
                                                 min = -.5,
