@@ -1,0 +1,12 @@
+  name: "Diffusion"
+  output_dir: "docs"
+  navbar:
+    title: "Diffusion"
+    left:
+    - text: "Navigation"
+      href: index.html
+    - text: "Diffusion_Presentation"
+      href: Diffusion_App_presentation.html
+  output:
+    html_document:
+      theme: cosmo
