@@ -8,7 +8,9 @@ library(grDevices)
 library(RColorBrewer)
 library(plotly)
 
-# Define UI for application that draws a histogram
+# Define UI for application With two tabs the first tab explains the diffusion model
+# and how the application works. The second tab shows the output from parameter manipulations
+# of the diffusion model.
 shinyUI(navbarPage(title = "The Diffusion Model",
                    tabPanel("What is The Diffusion Model?",
                             h2("About the Diffusion Model"),
@@ -29,7 +31,8 @@ shinyUI(navbarPage(title = "The Diffusion Model",
                              in addition to the proportion of responses for each response option. 
                              The model parameters are psychologically interpretable
                              and this app helps provide the user an intuitive understanding of how
-                             they affect the decision making process."),
+                             they affect the decision making process. In practice the model has more parameters,
+                             but this instance can be viewed as a minimally functional version."),
                             h2("Parameters of the Diffusion Model"),
                             h4("Drift Rate (v)"),
                             ("Drift rate is rate of information accumulation and dictates how quickly
