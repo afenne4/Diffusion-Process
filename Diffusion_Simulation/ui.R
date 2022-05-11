@@ -55,11 +55,14 @@ shinyUI(navbarPage(title = "The Diffusion Model",
                              the notion that our minds are not perfect processing machines. It is the reason why
                              'errors' still occur even though a decision is driven by a drift rate. Smaller values
                              indicate less noise, and larger values greater noise. In a typical implementation
-                             of the diffusion model, this value is held constant.")
+                             of the diffusion model, this value is held constant."),
+                            h2("Plots in Next Tab"),
+                            ("The top plot in the 'Diffusion Model Plots' tab shows the time course of 5 individual
+                             decision processes. ")
                              ),
                             
                             
-                   tabPanel("Simulated Diffusion Path",
+                   tabPanel("Diffusion Model Plots",
                             sidebarLayout(
                                 sidebarPanel(
                                     h3("Select Values for Diffusion Model Parameters"),
@@ -90,7 +93,7 @@ shinyUI(navbarPage(title = "The Diffusion Model",
                                 ),
                                 mainPanel(
                                     plotOutput("DiffusionPlot",width = "500px", height = "500px"),
-                                    plotlyOutput("RTplot",width = "500px", height = "400px")
+                                    plotlyOutput("RTplot",width = "500px", height = "900px")
                                 ))
                    
                     ),

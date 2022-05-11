@@ -7,6 +7,7 @@ library(gifski)
 library(grDevices)
 library(RColorBrewer)
 library(plotly)
+library(gridExtra)
 brownian<-function(T,N,delta,z){
     
     # T is a numeric value that represents the time interval of the diffusion process
@@ -111,14 +112,24 @@ shinyServer(function(input, output) {
         })
 
         #### RT Histogram Plot #####
-        output$RTplot<-renderPlotly({
-             RTp<-ggplot(driftdata()$RTcomb,aes(x=RT,fill=Type))+
-                geom_histogram(position="identity",alpha=0.5,color="black")+
-                ggtitle("RT distributions from 500 simulations \nof Diffusion Process")+
-                theme(plot.title=element_text(hjust=.5))
-            ggplotly(RTp)
-           
-        })
+    RTplot<-reactive({
+              RTp<-ggplot(driftdata()$RTcomb,aes(x=RT,fill=Type))+
+                 geom_histogram(position="identity",alpha=0.5,color="black")+
+                 ggtitle("RT distributions from 500 simulations \nof Diffusion Process")+
+                 theme(plot.title=element_text(hjust=.5))
+             ggplotly(RTp)
+    })
+    #### RT Boxplot #####
+    bxp<-reactive({
+        bxp<-ggplot(driftdata()$RTcomb,aes(x=Type))+
+            geom_boxplot(aes(y=RT,fill=Type),notch=TRUE,color="black")+
+            coord_flip()
+            ggplotly(bxp)
+    })
+    
+    output$RTplot<-renderPlotly({
+        subplot(RTplot(),bxp(),nrows=2,shareX = TRUE)
+    })
 
      #### Diffusion Process animated ####
      output$DiffusionPlot<-renderImage({ 
@@ -128,7 +139,7 @@ shinyServer(function(input, output) {
              geom_path()+
              geom_hline(yintercept=c(input$a,-input$a),color='red',size=1.5)+
              scale_color_brewer(palette = "Dark2")+
-             ggtitle("Simulation of 5 Separate Diffusion Paths \n With Absorbing Boundaries",
+             ggtitle("Simulation of 5 Individual Decisions",
              subtitle = paste('v = ',input$v,'z = ',input$z,'a = ',input$a,'Sigma = ',input$sigma))+
              theme(plot.title = element_text(hjust=.5),plot.subtitle = element_text(hjust=.5))+
              transition_reveal(Timestep)
