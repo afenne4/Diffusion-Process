@@ -7,3 +7,4 @@ output: html_document
 
 [Click here for Diffusion Presentation ](https://afenne4.github.io/Diffusion-Process/Diffusion_App_presentation.html)
 
+[Click here for Diffusion Model Shiny App](https://alex-fennell.shinyapps.io/diffusion_simulation/?_ga=2.247577294.813418988.1652387841-490609204.1652300330)

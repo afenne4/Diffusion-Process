@@ -5,7 +5,9 @@ account: alex-fennell
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 6283066
-bundleId: 5896829
+bundleId: 5900395
 url: https://alex-fennell.shinyapps.io/diffusion_simulation/
-when: 1652300634.87296
-lastSyncTime: 1652300634.87296
+when: 1652387936.36978
+lastSyncTime: 1652387936.36978
+asMultiple: FALSE
+asStatic: FALSE

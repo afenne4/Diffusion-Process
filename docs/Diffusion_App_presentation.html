@@ -189,7 +189,7 @@ slide:not(.current) .plotly.html-widget{
 
 <p>The model produces predicted response time distributions and response proportions for decision processes that terminate at the top and bottom decision boundaries.</p>
 
-</article></slide><slide class=""><hgroup><h2>Diffusion Model Parameters</h2></hgroup><article  class="smaller" id="diffusion-model-parameters">
+</article></slide><slide class=""><hgroup><h2>Diffusion Model Parameters</h2></hgroup><article  id="diffusion-model-parameters" class="smaller">
 
 <p>As was mentioned earlier, the diffusion model has parameters that are psychologically interpretable. Here is a brief explanation of the most important parameters.</p>
 
@@ -199,7 +199,7 @@ slide:not(.current) .plotly.html-widget{
 
 <p>-<strong>Starting point (z)</strong> represents where the information accumulation process begins. This captures biases in preference for one response over another. Positive values make it more likely and quicker for a response to terminate at the upper boundary and vice versa for negative values.</p>
 
-</article></slide><slide class=""><hgroup><h2>Diffusion Model Simulation</h2></hgroup><article  class="smaller" id="diffusion-model-simulation">
+</article></slide><slide class=""><hgroup><h2>Diffusion Model Simulation</h2></hgroup><article  id="diffusion-model-simulation" class="smaller">
 
 <pre class = 'prettyprint lang-r'>simplot&lt;-simplot+transition_reveal(Timestep)
 animate(simplot,nframes=75,renderer=gifski_renderer())</pre>
