@@ -29,7 +29,7 @@
       // Author information
       presenters: [
             {
-        name:  'Alex Fennell' ,
+        name:  'Use page up/down to navigate' ,
         company: '',
         gplus: '',
         twitter: '',
@@ -189,24 +189,20 @@ slide:not(.current) .plotly.html-widget{
 
 <p>The model produces predicted response time distributions and response proportions for decision processes that terminate at the top and bottom decision boundaries.</p>
 
-</article></slide><slide class=""><hgroup><h2>Diffusion Model Parameters</h2></hgroup><article  id="diffusion-model-parameters">
+</article></slide><slide class=""><hgroup><h2>Diffusion Model Parameters</h2></hgroup><article  class="smaller" id="diffusion-model-parameters">
 
-<p>As was mentioned earlier, the diffusion model has parameters that are psychologically interpretable. Here is a brief explanation of the most important parameters. -<strong>Drift rate</strong> is rate of information accumulation and dictates how quickly an individual accumulates information towards one response boundary or another. Larger positive values indicate faster accumulation towards the upper boundary, while negative values indicate faster accumulation towards the lower boundary</p>
+<p>As was mentioned earlier, the diffusion model has parameters that are psychologically interpretable. Here is a brief explanation of the most important parameters.</p>
 
-<p>-<strong>Boundary separation</strong> is a threshold parameter that represents how much information is required before a response is initiated. This is set by an individual and is interpreted as how cautious someone is in their responding. Higher values indicate more caution and result in longer response times and higher accuracy.</p>
+<p>-<strong>Drift rate (v)</strong> is rate of information accumulation and dictates how quickly an individual accumulates information towards one response boundary or another.</p>
 
-<p>-<strong>Starting point</strong> represents where the information accumulation process begins. This captures biases in preference for one response over another. Positive values make it more likely and quicker for a response to terminate at the upper boundary and vice versa for negative values.</p>
+<p>-<strong>Boundary separation (a)</strong> is a threshold parameter that represents how much information is required before a response is initiated. This is set by an individual and is interpreted as how cautious someone is in their responding.</p>
 
-</article></slide><slide class=""><hgroup><h2>Diffusion Model Simulation</h2></hgroup><article  id="diffusion-model-simulation">
+<p>-<strong>Starting point (z)</strong> represents where the information accumulation process begins. This captures biases in preference for one response over another. Positive values make it more likely and quicker for a response to terminate at the upper boundary and vice versa for negative values.</p>
 
-<pre class = 'prettyprint lang-r'>p&lt;-ggplot(newdf,aes(x=Timestep,y=Evidence))+geom_path(aes(color=Simulation))+
-    geom_hline(yintercept=c(a,-a),color=&#39;red&#39;,size=1.5)+
-    scale_color_brewer(palette = &quot;Dark2&quot;)+
-    ggtitle(&quot;Simulation of 5 Individual Decisionss&quot;,
-            subtitle = paste(&#39;v = &#39;,v,&#39;z = &#39;,z,&#39;sigma = &#39;,sigma,&#39;a = &#39;,a))+
-    theme(plot.title = element_text(hjust=.5),plot.subtitle = element_text(hjust=.5))+
-    transition_reveal(Timestep)
-animate(p,nframes=75,renderer=gifski_renderer())</pre>
+</article></slide><slide class=""><hgroup><h2>Diffusion Model Simulation</h2></hgroup><article  class="smaller" id="diffusion-model-simulation">
+
+<pre class = 'prettyprint lang-r'>simplot&lt;-simplot+transition_reveal(Timestep)
+animate(simplot,nframes=75,renderer=gifski_renderer())</pre>
 
 <p><img src='Diffusion_App_presentation_files/figure-html/plot%20of%20Decision%20Time%20course-1.gif' title=''/><!-- --></p></article></slide>
 
