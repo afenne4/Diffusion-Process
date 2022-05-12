@@ -8,27 +8,137 @@ output: ioslides_presentation
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-## R Markdown
+## The Psychology of Decision Making
 
-This is an R Markdown presentation. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+People make decisions all the time, but have you ever wondered how these decisions occur in our mind?
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document.
+The app I created offers the user an opportunity to delve into the decision making process
+and develop an intuitive understanding.
 
-## Slide with Bullets
+This decision process is captured by the diffusion model which is a well known model
+of decision making in psychology with parameters that are psychologically interpretable.
 
-- Bullet 1
-- Bullet 2
-- Bullet 3
+The user can adjust these parameters to see how they influence the time course of
+the decision making process.
 
-## Slide with R Output
+## What is the Diffusion Model?
 
-```{r cars, echo = TRUE}
-summary(cars)
+The diffusion model is a stochastic theoretical model of decision making.
+
+In the context of simple 2 choice decisions, the model assumes that information is accumulated 
+until a decision criterion (representing one of two response options) is reached at which
+point a response is made.
+
+The model produces predicted response time distributions and response proportions
+for decision processes that terminate at the top and bottom decision boundaries. 
+
+
+## Diffusion Model Parameters
+As was mentioned earlier, the diffusion model has parameters that are psychologically 
+interpretable. Here is a brief explanation of the most important parameters.
+-**Drift rate** is rate of information accumulation and dictates how quickly an individual
+accumulates information towards one response boundary or another. Larger positive values 
+indicate faster accumulation towards the upper boundary, while negative values indicate
+faster accumulation towards the lower boundary
+
+-**Boundary separation** is a threshold parameter that represents how much information
+is required before a response is initiated. This is set by an individual and is
+interpreted as how cautious someone is in their responding. Higher values indicate
+more caution and result in longer response times and higher accuracy.
+
+-**Starting point** represents where the information accumulation process begins. This
+captures biases in preference for one response over another. Positive values make
+it more likely and quicker for a response to terminate at the upper boundary and 
+vice versa for negative values.
+
+
+## Diffusion Model Simulation
+```{r Code to generate diffusion simulation}
+library(tidyverse)
+library(gganimate)
+library(gifski)
+library(grDevices)
+library(RColorBrewer)
+brownian<-function(T,N,delta,z){
+    
+    # T is time interval of diffusion process
+    # N is the number of steps
+    # delta determines speed of brownian motion
+    # z is starting point of the diffusion process
+    dt<-T/N
+    # create vector of random variables
+    r<-rnorm(N,0,1*delta*sqrt(dt))
+    # incorporate starting point random variables
+    r<-c(z,r)
+    # Brownian Motion is calculated by a cumulative sum of the random samples
+    brown<-cumsum(r)
+    return(brown)
+}
+
+brownian_drift<-function(T,N,delta,z,v,sigma){
+    # T is time interval of diffusion process
+    # N is the number of steps
+    # delta determines speed of brownian motion
+    # z is starting point of the diffusion process
+    # v is the drift rate (coefficient)
+    # sigma is the variability in drift
+    brown<-brownian(T,N,delta,z)
+    dt=T/N
+    time_steps<-seq(from=0,to=N*dt,length.out = N+1)
+    V<-v*time_steps+sigma*brown
+    return(V)
+}
+
+
+#Parameters
+
+
+
+sigma<-1 # diffusion coefficient
+v<-.1 #drift rate
+z<-0 # Starting point
+a<-15 # Boundary
+
+N=1000
+T=2*(a/v*sigma)
+nsim=5
+delta=1
+
+brown_drift<-matrix(0,nrow=N+1,ncol=nsim)
+t<-seq(from=0,to=N*(T/N),length.out = N+1)
+
+for(sim in 1:nsim){
+    brown_drift[,sim]<-brownian_drift(T,N,delta,z,v,sigma)
+}
+
+
+driftdata<-data.frame(t,brown_drift)
+colnames(driftdata)<-c("Timestep",paste0("Sim",seq(1:nsim)))
+
+df <- driftdata %>%
+    select(Timestep, paste0("Sim",seq(1:nsim))) %>%
+    gather(key = "Simulation", value = "Evidence", -Timestep)
+
+newdf<-data.frame()
+for(i in 1:nsim){
+    first<-which(df$Simulation==paste0("Sim",i))[1]  
+    ind<-which(df$Simulation==paste0("Sim",i)&(df$Evidence>=a|df$Evidence<=-a))[1]
+    newdf<-rbind(newdf,df[first:ind,])
+}  
+
+cols<-brewer.pal(3,"BuGn")  
+pal<-colorRampPalette(cols)
+
 ```
 
-## Slide with Plot
-
-```{r pressure}
-plot(pressure)
+```{r plot of Decision Time course, echo=TRUE}
+p<-ggplot(newdf,aes(x=Timestep,y=Evidence))+geom_path(aes(color=Simulation))+
+    geom_hline(yintercept=c(a,-a),color='red',size=1.5)+
+    scale_color_brewer(palette = "Dark2")+
+    ggtitle("Simulation of 5 Individual Decisionss",
+            subtitle = paste('v = ',v,'z = ',z,'sigma = ',sigma,'a = ',a))+
+    theme(plot.title = element_text(hjust=.5),plot.subtitle = element_text(hjust=.5))+
+    transition_reveal(Timestep)
+animate(p,nframes=75,renderer=gifski_renderer())
 ```
 

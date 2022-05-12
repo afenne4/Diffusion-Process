@@ -171,35 +171,44 @@ slide:not(.current) .plotly.html-widget{
           </hgroup>
   </slide>
 
-<slide class=""><hgroup><h2>R Markdown</h2></hgroup><article  id="r-markdown">
+<slide class=""><hgroup><h2>The Psychology of Decision Making</h2></hgroup><article  id="the-psychology-of-decision-making">
 
-<p>This is an R Markdown presentation. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <a href='http://rmarkdown.rstudio.com' title=''>http://rmarkdown.rstudio.com</a>.</p>
+<p>People make decisions all the time, but have you ever wondered how these decisions occur in our mind?</p>
 
-<p>When you click the <strong>Knit</strong> button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document.</p>
+<p>The app I created offers the user an opportunity to delve into the decision making process and develop an intuitive understanding.</p>
 
-</article></slide><slide class=""><hgroup><h2>Slide with Bullets</h2></hgroup><article  id="slide-with-bullets">
+<p>This decision process is captured by the diffusion model which is a well known model of decision making in psychology with parameters that are psychologically interpretable.</p>
 
-<ul>
-<li>Bullet 1</li>
-<li>Bullet 2</li>
-<li>Bullet 3</li>
-</ul>
+<p>The user can adjust these parameters to see how they influence the time course of the decision making process.</p>
 
-</article></slide><slide class=""><hgroup><h2>Slide with R Output</h2></hgroup><article  id="slide-with-r-output">
+</article></slide><slide class=""><hgroup><h2>What is the Diffusion Model?</h2></hgroup><article  id="what-is-the-diffusion-model">
 
-<pre class = 'prettyprint lang-r'>summary(cars)</pre>
+<p>The diffusion model is a stochastic theoretical model of decision making.</p>
 
-<pre >##      speed           dist       
-##  Min.   : 4.0   Min.   :  2.00  
-##  1st Qu.:12.0   1st Qu.: 26.00  
-##  Median :15.0   Median : 36.00  
-##  Mean   :15.4   Mean   : 42.98  
-##  3rd Qu.:19.0   3rd Qu.: 56.00  
-##  Max.   :25.0   Max.   :120.00</pre>
+<p>In the context of simple 2 choice decisions, the model assumes that information is accumulated until a decision criterion (representing one of two response options) is reached at which point a response is made.</p>
 
-</article></slide><slide class=""><hgroup><h2>Slide with Plot</h2></hgroup><article  id="slide-with-plot">
+<p>The model produces predicted response time distributions and response proportions for decision processes that terminate at the top and bottom decision boundaries.</p>
 
-<p><img src="Diffusion_App_presentation_files/figure-html/pressure-1.png" width="720" /></p></article></slide>
+</article></slide><slide class=""><hgroup><h2>Diffusion Model Parameters</h2></hgroup><article  id="diffusion-model-parameters">
+
+<p>As was mentioned earlier, the diffusion model has parameters that are psychologically interpretable. Here is a brief explanation of the most important parameters. -<strong>Drift rate</strong> is rate of information accumulation and dictates how quickly an individual accumulates information towards one response boundary or another. Larger positive values indicate faster accumulation towards the upper boundary, while negative values indicate faster accumulation towards the lower boundary</p>
+
+<p>-<strong>Boundary separation</strong> is a threshold parameter that represents how much information is required before a response is initiated. This is set by an individual and is interpreted as how cautious someone is in their responding. Higher values indicate more caution and result in longer response times and higher accuracy.</p>
+
+<p>-<strong>Starting point</strong> represents where the information accumulation process begins. This captures biases in preference for one response over another. Positive values make it more likely and quicker for a response to terminate at the upper boundary and vice versa for negative values.</p>
+
+</article></slide><slide class=""><hgroup><h2>Diffusion Model Simulation</h2></hgroup><article  id="diffusion-model-simulation">
+
+<pre class = 'prettyprint lang-r'>p&lt;-ggplot(newdf,aes(x=Timestep,y=Evidence))+geom_path(aes(color=Simulation))+
+    geom_hline(yintercept=c(a,-a),color=&#39;red&#39;,size=1.5)+
+    scale_color_brewer(palette = &quot;Dark2&quot;)+
+    ggtitle(&quot;Simulation of 5 Individual Decisionss&quot;,
+            subtitle = paste(&#39;v = &#39;,v,&#39;z = &#39;,z,&#39;sigma = &#39;,sigma,&#39;a = &#39;,a))+
+    theme(plot.title = element_text(hjust=.5),plot.subtitle = element_text(hjust=.5))+
+    transition_reveal(Timestep)
+animate(p,nframes=75,renderer=gifski_renderer())</pre>
+
+<p><img src='Diffusion_App_presentation_files/figure-html/plot%20of%20Decision%20Time%20course-1.gif' title=''/><!-- --></p></article></slide>
 
 
   <slide class="backdrop"></slide>

@@ -77,7 +77,7 @@ pal<-colorRampPalette(cols)
 p<-ggplot(newdf,aes(x=Timestep,y=Evidence))+geom_path(aes(color=Simulation))+
     geom_hline(yintercept=c(a,-a),color='red',size=1.5)+
     scale_color_brewer(palette = "Dark2")+
-    ggtitle("Simulation of 5 Separate Diffusion Paths \n With Absorbing Boundaries",
+    ggtitle("Simulation of 5 Individual Decisionss",
             subtitle = paste('v = ',v,'z = ',z,'sigma = ',sigma,'a = ',a))+
     theme(plot.title = element_text(hjust=.5),plot.subtitle = element_text(hjust=.5))+
     transition_reveal(Timestep)
