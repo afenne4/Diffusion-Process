@@ -103,7 +103,7 @@ shinyUI(navbarPage(title = "The Diffusion Model",
                                 ),
                                 mainPanel(
                                     plotOutput("DiffusionPlot",width = "500px", height = "500px"),
-                                    plotlyOutput("RTplot",width = "500px", height = "900px")
+                                    plotlyOutput("RTplot",width = "1100px", height = "500px")
                                 ))
                    
                     ),

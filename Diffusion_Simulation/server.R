@@ -128,7 +128,7 @@ shinyServer(function(input, output) {
     })
     
     output$RTplot<-renderPlotly({
-        subplot(RTplot(),bxp(),nrows=2,shareX = TRUE)
+        subplot(bxp(),RTplot(),nrows=1,shareX = TRUE)
     })
 
      #### Diffusion Process animated ####
