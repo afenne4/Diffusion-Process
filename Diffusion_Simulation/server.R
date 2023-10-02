@@ -125,7 +125,7 @@ shinyServer(function(input, output, session) {
         #### RT Histogram Plot #####
     RTplot<-reactive({
               RTp<-ggplot(driftdata()$RTcomb,aes(x=RT,fill=Type))+
-                 geom_histogram(position="identity",alpha=0.5,color="black")+
+                 geom_histogram(position="identity",alpha=0.5,color="grey")+
                  ggtitle("RT distributions from 500 simulations")+
                  theme(plot.title=element_text(hjust=.5))
              ggplotly(RTp)
@@ -133,7 +133,7 @@ shinyServer(function(input, output, session) {
     #### RT Boxplot #####
     bxp<-reactive({
         bxp<-ggplot(driftdata()$RTcomb,aes(x=Type))+
-            geom_boxplot(aes(y=RT,fill=Type),notch=TRUE,color="black")+
+            geom_boxplot(aes(y=RT,fill=Type),notch=TRUE,color="grey")+
             coord_flip()
             ggplotly(bxp)
     })

@@ -116,6 +116,7 @@ shinyUI(navbarPage(theme = darktheme,
                                 sidebarPanel(
                                     h3("Select Values for Diffusion Model Parameters"),
                                     h5("(Plots take ~15s to render)"),
+                                    actionButton("generate_plot","Render Plots"),
                                     sliderInput("v",
                                                 "Select Drift Rate (v):",
                                                 min = -.5,
