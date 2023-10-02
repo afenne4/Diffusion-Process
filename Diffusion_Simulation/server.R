@@ -4,10 +4,17 @@ library(shiny)
 library(tidyverse)
 library(gganimate)
 library(gifski)
+library(waiter)
+library(bslib)
+library(thematic)
 library(grDevices)
 library(RColorBrewer)
 library(plotly)
 library(gridExtra)
+
+darktheme<-bs_theme(version=5,primary = "#0077EB", bootswatch = "superhero")
+lighttheme<-bs_theme(version=5,bootswatch = "cosmo")
+
 brownian<-function(T,N,delta,z){
     
     # T is a numeric value that represents the time interval of the diffusion process
@@ -45,7 +52,11 @@ brownian_drift<-function(T,N,delta,z,v,sigma){
         return(V)
 }
 # Define server logic required to draw a histogram
-shinyServer(function(input, output) {
+shinyServer(function(input, output, session) {
+    
+    observe(session$setCurrentTheme(
+        if (isTRUE(input$dark_mode)) lighttheme else darktheme
+    ))
     
     # N is a numeric integer that represents the number of steps
     N=1000
