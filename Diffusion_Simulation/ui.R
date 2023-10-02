@@ -147,18 +147,18 @@ shinyUI(navbarPage(theme = darktheme,
                                                  fluidRow(column(12,
                                                                  h2("Plots in Next Tab"),
                                                                  ("The top plot in the 'Diffusion Model Plots' tab shows the time course of 5 individual
-                             decision processes. The middle plot shows a histogram of the correct and error (Top and 
-                             bottom boundary responses) RTs from 500 simulations of the diffusion process. The bottom
-                             plot is a boxplot of correct and error responses that offers a better understanding of
-                             the RT quantiles. The correct and error distributions can be toggled by clicking the
-                             legend. As the drift is increased the amount of error responses will decrease and the
-                             model will no longer predict error RTs. Adjust the sliders on the left sidebar
-                             to see how different parameter combinations influence RT distributions and the 
-                             time course of the decision process.")))),
+                                                                    decision processes. The middle plot shows a histogram of the correct and error (Top and 
+                                                                    bottom boundary responses) RTs from 500 simulations of the diffusion process. The bottom                             plot is a boxplot of correct and error responses that offers a better understanding of
+                                                                    the RT quantiles. The correct and error distributions can be toggled by clicking the
+                                                                    legend. As the drift is increased the amount of error responses will decrease and the
+                                                                    model will no longer predict error RTs. Adjust the sliders on the left sidebar
+                                                                    to see how different parameter combinations influence RT distributions and the 
+                                                                    time course of the decision process.")))),
                                         tabPanel("Evidence Accumulation and RT Distributions",
                                                  fluidRow(column(12,
-                                    plotOutput("DiffusionPlot",width = "500px", height = "500px"),
-                                    plotlyOutput("RTplot",width = "1100px", height = "500px")
+                                                                 useWaitress(),
+                                                                 plotOutput("DiffusionPlot",width = "500px", height = "500px"),
+                                                                 plotlyOutput("RTplot",width = "1100px", height = "500px")
                                 )))
                    
                     )),

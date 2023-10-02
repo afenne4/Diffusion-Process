@@ -67,7 +67,9 @@ shinyServer(function(input, output, session) {
     # a fixed value for this application
     delta=1
     
-    driftdata<-reactive({
+    driftdata<-eventReactive(input$generate_plot,{
+        waitress<-Waitress$new("#DiffusionPlot",theme="overlay-percent")
+        waitress$auto(value=1,ms=200)
         # T is a value based on user input that will be used to calculate the
         # timesteps in the diffusion process
         T<-4*abs(input$a/(input$v)*input$sigma)
@@ -119,19 +121,19 @@ shinyServer(function(input, output, session) {
         RTcomb<-rbind(correctRT,errorRT)
         # The two objects returned are a data frame containing the evidence accumulation
         # trajectories of 5 simulations, and another data frame containing the Reaction Times
-        list(data=na.omit(newdf),RTcomb=RTcomb)
+        list(data=na.omit(newdf),RTcomb=RTcomb,wait=waitress)
         })
 
         #### RT Histogram Plot #####
-    RTplot<-reactive({
+    RTplot<-eventReactive(input$generate_plot,{
               RTp<-ggplot(driftdata()$RTcomb,aes(x=RT,fill=Type))+
-                 geom_histogram(position="identity",alpha=0.5,color="grey")+
+                 geom_histogram(position="identity",alpha=0.5,color="black")+
                  ggtitle("RT distributions from 500 simulations")+
                  theme(plot.title=element_text(hjust=.5))
              ggplotly(RTp)
     })
     #### RT Boxplot #####
-    bxp<-reactive({
+    bxp<-eventReactive(input$generate_plot,{
         bxp<-ggplot(driftdata()$RTcomb,aes(x=Type))+
             geom_boxplot(aes(y=RT,fill=Type),notch=TRUE,color="grey")+
             coord_flip()
@@ -143,9 +145,9 @@ shinyServer(function(input, output, session) {
     })
 
      #### Diffusion Process animated ####
-     output$DiffusionPlot<-renderImage({ 
-         outfile<-tempfile(fileext='.gif')
-         
+     DiffusionPlot<-eventReactive(input$generate_plot,{ 
+         waitress<-Waitress$new("#DiffusionPlot",theme="overlay-percent")
+         waitress$auto(value=1,ms=200)
          p<-ggplot(driftdata()$dat,aes(x=Timestep,y=Evidence,color=Simulation))+
              geom_path()+
              geom_hline(yintercept=c(input$a,-input$a),color='red',size=1.5)+
@@ -154,8 +156,12 @@ shinyServer(function(input, output, session) {
              subtitle = paste('v = ',input$v,'z = ',input$z,'a = ',input$a,'Sigma = ',input$sigma))+
              theme(plot.title = element_text(hjust=.5),plot.subtitle = element_text(hjust=.5))+
              transition_reveal(Timestep)
-        
-        anim_save("outfile.gif",animate(p,nframes=40))
+         list(p=p,wait=waitress)
+     })
+    output$DiffusionPlot<-renderImage({
+         outfile<-tempfile(fileext='.gif')
+        anim_save("outfile.gif",animate(DiffusionPlot()$p,nframes=40))
+        DiffusionPlot()$wait$close() 
         list(src="outfile.gif",
              contentType='image/gif',
              width=500,
